@@ -1,48 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
-    <script type="module" src="/main.js" defer></script>
-    <style>
-      .logo.vanilla:hover {
-        filter: drop-shadow(0 0 2em #ffe21c);
-      }
-    </style>
-  </head>
+<html>
 
-  <body>
-    <div class="container">
-      <h1>Welcome to Tauri!</h1>
+<head>
 
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
-      </div>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <p>Click on the Tauri logo to learn more about the framework</p>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,300;1,6..12,400;1,6..12,500;1,6..12,600;1,6..12,700&display=swap" rel="stylesheet">
 
-      <div class="row">
-        <div>
-          <input id="greet-input" placeholder="Enter a name..." />
-          <button id="greet-button" type="button">Greet</button>
-        </div>
-      </div>
+	<script type="module" src="/main.js" defer></script>
+	<script src="/js/qrcode.min.js" defer></script>
 
-      <p id="greet-msg"></p>
-    </div>
-  </body>
+</head>
+
+<body>
+
+	<h1>QRious</h1>
+	<h2>QR Code Generator</h2>
+
+	<div class="container">
+		<div class="input-data">
+			<form id="qrgenerateform">
+				<input type="text" id="qrgenerateforminput" placeholder="Enter your text here" required>
+				<button id="generate" type="submit">Generate</button>
+				<button id="qrdownload" type="button">Download</button>
+				<button id="qrclear" type="button">Clear</button>
+			</form>
+		</div>
+		<div class="output-data">
+			<div id="qrcode"></div>
+		</div>
+	</div>
+
+	<script>
+		const qrgenerateform = document.getElementById('qrgenerateform');
+		const qrcode = document.getElementById('qrcode');
+		const qrgenerateforminput = document.getElementById('qrgenerateforminput');
+		const qrdownload = document.getElementById('qrdownload');
+		const qrclear = document.getElementById('qrclear');
+
+		qrgenerateform.addEventListener('submit', (e) => {
+			e.preventDefault();
+			new QRCode(qrcode, qrgenerateforminput.value);
+		});
+
+		qrdownload.addEventListener('click', () => {
+			const canvas = document.querySelector('canvas');
+			const image = canvas.toDataURL('image/png');
+			const link = document.createElement('a');
+			link.href = image;
+			link.download = `qrious_${qrgenerateforminput.value}.png`;
+			link.click();
+		});
+
+		qrclear.addEventListener('click', () => {
+			qrcode.innerHTML = '';
+			qrgenerateforminput.value = '';
+		});
+	</script>
+
+</body>
+
 </html>
