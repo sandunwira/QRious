@@ -15,49 +15,12 @@
 
 	<script type="module" src="/main.js" defer></script>
 	<script src="/js/qrcode.min.js" defer></script>
+	<script src="/js/qrgenerate.js" defer></script>
+	<script src="/js/qrscan.js" defer></script>
 
 </head>
 
 <body>
-
-	<!-- <div class="containerBlock flex flexCol" style="justify-content: center; align-items: center;">
-		<div class="container flex flexCol" style="justify-content: center; align-items: center; gap: 10px;">
-			<div class="flex flexCol" style="height: 20%; width: 100%; justify-content: center; align-items: center; gap: 5px;">
-				<h1 style="font-weight: 300;">QRious</h1>
-				<h2>QR Code Generator</h2>
-			</div>
-
-			<div class="flex flexRow" style="height: 80%; width: 100%; justify-content: center; align-items: center; gap: 30px;">
-				<div class="flex flexCol" style="height: calc(100% - 4px); width: calc(50% - 4px); justify-content: center; align-items: center; gap: 10px; border-radius: 10px; border: 2px solid #ECECEC; overflow: auto;">
-					<span class="flex flexCol" style="height: calc(100% - 50px); width: calc(100% - 50px); align-items: flex-start; justify-content: flex-start; gap: 20px;">
-						<h1 style="width: 100%; font-size: 18px; font-weight: 300; text-align: center;">QR Generator</h1>
-
-						<div class="input-data flex" style="height: auto; width: 100%; justify-content: center; align-items: center;">
-							<form id="qrgenerateform" class="flex flexRow" style="width: 100%; gap: 20px;">
-								<input type="text" id="qrgenerateforminput" style="width: 60%;" placeholder="Enter your text here" required>
-								<span class="flex flexRow" style="width: 40%; justify-content: space-between;">
-									<button id="generate" class="button" type="submit">Generate</button>
-									<button id="qrdownload" class="button" type="button">Download</button>
-									<button id="qrclear" class="button" type="button">Clear</button>
-								</span>
-							</form>
-						</div>
-
-						<div class="output-data">
-							<h1 style="font-size: 14px; font-weight: 300;">Result:</h1>
-							<div id="qrcode" style="height: 256px; width: 256px;"></div>
-						</div>
-					</span>
-					
-				</div>
-
-				<div class="flex flexCol" style="height: calc(100% - 4px); width: calc(50% - 4px); justify-content: center; align-items: center; gap: 10px; border-radius: 10px; border: 2px solid #ECECEC; overflow: auto;">
-					
-				</div>
-			</div>
-		</div>
-
-	</div> -->
 
 	<div class="flex flexCol" style="height: 100vh; width: 100%; position: fixed; top: 0;align-items: center; justify-content: center;">
 
@@ -95,53 +58,75 @@
 		</div>
 		<div data-tauri-drag-region style="position: fixed; top: 5px; left: 0; background: transparent; height: 25px; width: calc(100% - 120px);"></div>
 
-		<div class="flex flexCol" style="height: calc(100% - 30px); width: 100%; align-items: center; justify-content: center;">
-			<div id="scrollContainer" class="flex" style="height: 90%; width: 100%; overflow: auto; justify-content: center;">
+		<div class="flex flexRow" style="height: calc(100% - 30px); width: 100%; align-items: center; justify-content: center;">
+			<div class="flex flexCol" style="min-height: 100%; max-height: 100%; width: 50%; overflow: auto; justify-content: start;">
 
-				<div class="flex flexCol" style="height: auto; width: 90%; align-items: center; justify-content: start;"></div>
+				<div class="flex flexCol" style="height: calc(100% - 40px); width: calc(100% - 40px); margin: 20px; gap: 20px;">
+					<h1 style="color: #E18831; font-size: 24px; font-family: var(--light);">QR Code Generator</h1>
+
+					<form id="qrgenerateform" class="flex flexRow" style="height: 100%; width: 100%; gap: 20px;">
+						<div class="flex flexRow" style="height: 32px; width: 100%;">
+							<input type="text" id="qrgenerateforminput" style="color: #B0B0B0; background: #424242; width: calc(100% - 40px); padding: 8px 12px; border: none; border-radius: 8px 0px 0px 8px; outline: none;" placeholder="Enter URL / Message..." autocomplete="off" spellcheck="false" title="" required>
+
+							<button type="submit" id="generate" class="flex" style="background: #424242; align-items: center; justify-content: center; padding: 8px 14px; border: none; border-radius: 0px 8px 8px 0px; outline: none; cursor: not-allowed;">
+								<img id="generateIcon" style="height: 60%; filter: invert(67%) sepia(0%) saturate(1281%) hue-rotate(151deg) brightness(130%) contrast(91%);" src="assets/images/ui/send.svg">
+							</button>
+						</div>
+
+						<button id="qrclear" class="flex" style="color: #B0B0B0; background: #424242; align-items: center; justify-content: center; padding: 8px 14px; border: none; border-radius: 8px; outline: none; opacity: 0.5; cursor: not-allowed;" type="button">Clear</button>
+					</form>
+
+					<div class="output-data flex flexCol" style="align-items: start; justify-content: center; gap: 20px;">
+						<span class="flex flexRow" style="align-items: center; gap: 6px;">
+							<h1 style="font-size: 14px; font-family: var(--light);">Input:</h1>
+							<p id="inputText" style="color: #B0B0B0; font-family: var(--light); font-size: 14px; text-transform: none;">none</p>
+						</span>
+
+						<div id="qrcode" class="flex" style="height: 256px; width: 256px; color: #B0B0B0; font-size: 12px; font-family: var(--light); text-transform: uppercase; border: 2px solid #B0B0B0; border-radius: 5px; align-items: center; justify-content: center;"></div>
+
+						<button id="qrdownload" class="flex" style="color: #B0B0B0; background: #424242; align-items: center; justify-content: center; padding: 8px 14px; border: none; border-radius: 8px; outline: none; opacity: 0.5; cursor: not-allowed;" type="button">Download</button>
+					</div>
+				</div>
+
+			</div>
+
+
+			<span class="flex" style="height: calc(100% - 40px); width: 1px; background: #424242;"></span>
+
+
+			<div class="flex flexCol" style="min-height: 100%; max-height: 100%; width: 50%; overflow: auto; justify-content: start;">
+
+				<!-- <div class="flex flexCol" style="height: calc(100% - 40px); width: calc(100% - 40px); margin: 20px; gap: 20px;">
+					<h1 style="color: #E18831; font-size: 24px; font-family: var(--light);">QR Code Scanner</h1>
+
+					<form id="qrscanform" class="flex flexRow" style="height: 100%; width: 100%; gap: 20px;">
+						<div class="flex flexRow" style="height: 32px; width: 100%; gap: 20px;">
+							<input type="file" id="qrgenerateforminput" style="color: #B0B0B0; background: #424242; width: calc(100% - 40px); padding: 8px 12px; border: none; border-radius: 8px; outline: none;" placeholder="Enter URL / Message..." autocomplete="off" spellcheck="false" title="" required>
+
+							<button type="submit" id="scan" class="flex" style="color: #B0B0B0; background: #424242; align-items: center; justify-content: center; padding: 8px 14px; border: none; border-radius: 8px; outline: none; opacity: 0.5; cursor: not-allowed;">
+								Scan
+							</button>
+						</div>
+
+						<button id="qrclear" class="flex" style="color: #B0B0B0; background: #424242; align-items: center; justify-content: center; padding: 8px 14px; border: none; border-radius: 8px; outline: none; opacity: 0.5; cursor: not-allowed;" type="button">Clear</button>
+					</form>
+
+					<div class="input-data flex flexCol" style="align-items: start; justify-content: center; gap: 20px;">
+						<h1 style="font-size: 14px; font-family: var(--light);">Preview:</h1>
+
+						<div id="qrcodescanpreview" class="flex" style="height: 256px; width: 256px; color: #B0B0B0; font-size: 12px; font-family: var(--light); text-transform: uppercase; border: 2px solid #B0B0B0; border-radius: 5px; align-items: center; justify-content: center;"></div>
+					</div>
+
+					<div class="flex flexCol" style="align-items: start; justify-content: center; gap: 20px;">
+						<h1 style="font-size: 14px; font-family: var(--light);">Information:</h1>
+						<textarea id="outputText" style="color: #B0B0B0; background: #424242; height: 150px; width: calc(100% - 24px); padding: 8px 12px; border: none; border-radius: 8px; outline: none; text-transform: none; resize: none;" placeholder="Output Will Appear Here..." readonly></textarea>
+					</div>
+				</div> -->
 
 			</div>
 		</div>
 
-
-		<!-- <form id="chat-form" class="flex flexCol" style="height: 100px; width: 100%; align-items: center; justify-content: center; gap: 10px;">
-			<div class="flex flexRow" style="width: 60%; height: 40%; gap: 10px;">
-				<input style="width: calc(100% - 32px); color: #B0B0B0; background: #424242; padding: 8px 12px; border: none; border-radius: 8px; outline: none;" type="text" id="message-input" placeholder="Message Aurora..." autocomplete="off" spellcheck="false" title="">
-
-				<button class="flex" style="height: 100%; background: #424242; align-items: center; justify-content: center; padding: 8px 14px; border: none; border-radius: 8px; outline: none; opacity: 0.5; cursor: not-allowed;" type="submit" id="submitBtn">
-					<img style="height: 60%;" src="assets/images/ui/send.svg">
-				</button>
-			</div>
-		</form> -->
-
 	</div>
-
-	<!-- <script>
-		const qrgenerateform = document.getElementById('qrgenerateform');
-		const qrcode = document.getElementById('qrcode');
-		const qrgenerateforminput = document.getElementById('qrgenerateforminput');
-		const qrdownload = document.getElementById('qrdownload');
-		const qrclear = document.getElementById('qrclear');
-
-		qrgenerateform.addEventListener('submit', (e) => {
-			e.preventDefault();
-			new QRCode(qrcode, qrgenerateforminput.value);
-		});
-
-		qrdownload.addEventListener('click', () => {
-			const canvas = document.querySelector('canvas');
-			const image = canvas.toDataURL('image/png');
-			const link = document.createElement('a');
-			link.href = image;
-			link.download = `qrious_${qrgenerateforminput.value}.png`;
-			link.click();
-		});
-
-		qrclear.addEventListener('click', () => {
-			qrcode.innerHTML = '';
-			qrgenerateforminput.value = '';
-		});
-	</script> -->
 
 </body>
 
